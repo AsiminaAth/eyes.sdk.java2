@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
 
+@SuppressWarnings("WeakerAccess")
 /**
  * A batch of tests.
  */
@@ -63,6 +64,7 @@ public class BatchInfo {
      * @param id The batch's ID
      */
     public void setId (String id) {
+        ArgumentGuard.notNullOrEmpty(id, "id");
         this.id = id;
     }
 
