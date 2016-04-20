@@ -1845,9 +1845,9 @@ public class Eyes extends EyesBase {
      * @param driver The driver to use for setting the viewport.
      * @param size The required viewport size.
      */
-    public void setViewportSize(WebDriver driver, RectangleSize size) {
+    public static void setViewportSize(WebDriver driver, RectangleSize size) {
         ArgumentGuard.notNull(driver, "driver");
-        EyesSeleniumUtils.setViewportSize(logger, driver, size);
+        EyesSeleniumUtils.setViewportSize(new Logger(), driver, size);
     }
 
     @Override
