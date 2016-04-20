@@ -235,11 +235,15 @@ public class EyesSeleniumUtils {
             //noinspection unchecked
             List<Long> esAsList =
                 (List<Long>) executor.executeScript(JS_GET_CONTENT_ENTIRE_SIZE);
+            if (esAsList.size() <= 0) {
+                throw new EyesDriverOperationException(
+                        "Received empty value as frame's size");
+            }
             result = new RectangleSize(esAsList.get(0).intValue(),
                     esAsList.get(1).intValue());
         } catch (WebDriverException e) {
             throw new EyesDriverOperationException(
-                    "Failed to extract entire size!");
+                    "Got exception while trying to extract entire size!", e);
         }
         return result;
     }
