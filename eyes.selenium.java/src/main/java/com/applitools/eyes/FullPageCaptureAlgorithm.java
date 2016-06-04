@@ -19,14 +19,23 @@ class FullPageCaptureAlgorithm {
         ArgumentGuard.notNull(logger, "logger");
         this.logger = logger;
     }
+
     /**
      * Returns a stitching of a region.
+     *
+     * @param imageProvider The provider for the screenshot.
      * @param regionProvider A provider of the region to stitch. If {@code
      *                       getRegion} returns {@code Region.EMPTY}, the
      *                       entire image will be stitched.
+     * @param originProvider A provider for scrolling to initial position
+     *                       before starting the actual stitching.
      * @param positionProvider A provider of the scrolling implementation.
      * @param scaleProvider The provider which performs the necessary
      *                         scaling.
+     * @param waitBeforeScreenshots Time to wait before each screenshot
+     *                              (milliseconds).
+     * @param screenshotFactory The factory to use for creating screenshots
+     *                          from the images.
      * @return An image which represents the stitched region.
      */
     public BufferedImage getStitchedRegion(ImageProvider imageProvider,
@@ -54,10 +63,10 @@ class FullPageCaptureAlgorithm {
 
         int setPositionRetries = 3;
         do {
-            positionProvider.setPosition(new Location(0, 0));
+            originProvider.setPosition(new Location(0, 0));
             // Give the scroll time to stabilize
             GeneralUtils.sleep(waitBeforeScreenshots);
-            currentPosition = positionProvider.getCurrentPosition();
+            currentPosition = originProvider.getCurrentPosition();
         } while (currentPosition.getX() != 0
                 && currentPosition.getY() != 0
                 && (--setPositionRetries > 0));
