@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>eyes-connectivity-java2-jersey1x</artifactId>
+    <artifactId>eyes-connectivity-java-jersey1x</artifactId>
     <packaging>jar</packaging>
 
-    <name>eyes-connectivity-java2-jersey1x</name>
+    <name>eyes-connectivity-java-jersey1x</name>
     <url>http://maven.apache.org</url>
 
     <description>Applitools Eyes SDK REST API communication implementation depending on Jersey version 1x</description>
@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
           <groupId>com.applitools</groupId>
-          <artifactId>eyes-common-java2</artifactId>
+          <artifactId>eyes-common-java</artifactId>
           <version>${eyes.version}</version>
         </dependency>
         <dependency>

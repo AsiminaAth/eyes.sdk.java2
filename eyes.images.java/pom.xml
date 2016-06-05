@@ -3,10 +3,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>eyes-images-java2</artifactId>
+    <artifactId>eyes-images-java</artifactId>
     <packaging>jar</packaging>
 
-    <name>eyes-images-java2</name>
+    <name>eyes-images-java</name>
     <url>http://www.applitools.com</url>
 
     <description>Applitools Eyes SDK Rest API wrapper for Java</description>
@@ -20,7 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-sdk-java2-jersey2x</artifactId>
+            <artifactId>eyes-sdk-java-jersey2x</artifactId>
             <version>${eyes.version}</version>
         </dependency>
     </dependencies>

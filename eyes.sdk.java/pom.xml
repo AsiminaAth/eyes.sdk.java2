@@ -2,10 +2,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>eyes-sdk-java2-jersey2x</artifactId>
+    <artifactId>eyes-sdk-java-jersey2x</artifactId>
     <packaging>jar</packaging>
 
-    <name>eyes-sdk-java2</name>
+    <name>eyes-sdk-java</name>
     <url>http://www.applitools.com</url>
 
     <description>Applitools Eyes SDK base for Java</description>
@@ -20,12 +20,12 @@
     <dependencies>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-common-java2</artifactId>
+            <artifactId>eyes-common-java</artifactId>
             <version>${eyes.version}</version>
         </dependency>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-connectivity-java2-jersey2x</artifactId>
+            <artifactId>eyes-connectivity-java-jersey2x</artifactId>
             <version>${eyes.version}</version>
         </dependency>
     </dependencies>
