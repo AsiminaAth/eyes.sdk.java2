@@ -116,6 +116,11 @@ class FullPageCaptureAlgorithm {
             return image;
         }
 
+        // These will be used for storing the actual stitched size (it is
+        // sometimes less than the size extracted via "getEntireSize").
+        Location lastSuccessfulLocation;
+        RectangleSize lastSuccesfulPartSize;
+
         // The screenshot part is a bit smaller than the screenshot size,
         // in order to eliminate duplicate bottom scroll bars, as well as fixed
         // position footers.
@@ -146,11 +151,15 @@ class FullPageCaptureAlgorithm {
         stitchedImage.getRaster().setRect(0, 0, initialPart);
         logger.verbose("Done!");
 
+        lastSuccessfulLocation = new Location(0, 0);
+        lastSuccesfulPartSize = new RectangleSize(initialPart.getWidth(),
+                initialPart.getHeight());
+
         PositionMemento originalStitchedState = positionProvider.getState();
 
         // Take screenshot and stitch for each screenshot part.
         logger.verbose("Getting the rest of the image parts...");
-        BufferedImage partImage;
+        BufferedImage partImage = null;
         for (Region partRegion: imageParts) {
             // Skipping screenshot for 0,0 (already taken)
             if (partRegion.getLeft() == 0 && partRegion.getTop() == 0) {
@@ -184,11 +193,37 @@ class FullPageCaptureAlgorithm {
             stitchedImage.getRaster().setRect(currentPosition.getX(),
                     currentPosition.getY(), partImage.getData());
             logger.verbose("Done!");
+
+            lastSuccessfulLocation = currentPosition;
+        }
+
+        if (partImage != null) {
+            lastSuccesfulPartSize = new RectangleSize(partImage.getWidth(),
+                    partImage.getHeight());
         }
 
         logger.verbose("Stitching done!");
         positionProvider.restoreState(originalStitchedState);
         originProvider.restoreState(originalPosition);
+
+        // If the actual image size is smaller than the extracted size, we
+        // crop the image.
+        int actualImageWidth = lastSuccessfulLocation.getX() +
+                lastSuccesfulPartSize.getWidth();
+        int actualImageHeight = lastSuccessfulLocation.getY() +
+                lastSuccesfulPartSize.getHeight();
+        logger.verbose("Extracted entire size: " + entireSize);
+        logger.verbose("Actual stitched size: " + actualImageWidth + "x" +
+                actualImageHeight);
+
+        if (actualImageWidth < stitchedImage.getWidth() ||
+                actualImageHeight < stitchedImage.getHeight()) {
+            logger.verbose("Trimming unnecessary margins..");
+            stitchedImage = ImageUtils.getImagePart(stitchedImage,
+                    new Region(0, 0, actualImageWidth, actualImageHeight));
+            logger.verbose("Done!");
+        }
+
         return stitchedImage;
     }
 }
