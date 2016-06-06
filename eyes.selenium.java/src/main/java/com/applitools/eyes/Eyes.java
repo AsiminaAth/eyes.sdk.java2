@@ -79,7 +79,7 @@ public class Eyes extends EyesBase {
 
     @Override
     public String getBaseAgentId() {
-        return "eyes.selenium.java/2.33";
+        return "eyes.selenium.java/2.50";
     }
 
     @SuppressWarnings("UnusedDeclaration")
