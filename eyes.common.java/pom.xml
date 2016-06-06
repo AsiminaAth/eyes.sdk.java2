@@ -10,7 +10,7 @@
     <description>Common code for Applitools Eyes Java SDK projects</description>
     <parent>
         <groupId>com.applitools</groupId>
-        <artifactId>eyes-sdk-java2-parent</artifactId>
+        <artifactId>eyes-sdk-java-parent</artifactId>
         <version>2.34</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>

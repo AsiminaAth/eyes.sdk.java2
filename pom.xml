@@ -40,10 +40,12 @@
         </developer>
     </developers>
     <modules>
+        <module>parent</module>
         <module>eyes.common.java</module>
-        <module>eyes.connectivity.java.jersey1x</module>
+        <!--<module>eyes.connectivity.java.jersey1x</module>-->
         <module>eyes.connectivity.java.jersey2x</module>
         <module>eyes.sdk.java</module>
+        <module>eyes.images.java</module>
         <module>eyes.selenium.java</module>
     </modules>
 </project>
