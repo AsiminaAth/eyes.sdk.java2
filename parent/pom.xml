@@ -23,7 +23,6 @@
         <version>7</version>
     </parent>
     <properties>
-        <eyes.version>2.50</eyes.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <distributionManagement>
