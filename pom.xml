@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.applitools</groupId>
     <artifactId>eyes-sdk-java-aggregator</artifactId>
-    <version>2.50</version>
+    <version>2.51</version>
     <packaging>pom</packaging>
     <name>eyes-sdk-java-aggregator</name>
     <url>http://www.applitools.com</url>
