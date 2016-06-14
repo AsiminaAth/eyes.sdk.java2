@@ -12,7 +12,7 @@
         <groupId>com.applitools</groupId>
         <artifactId>eyes-sdk-java-parent</artifactId>
         <version>2.51</version>
-        <relativePath>../parent/pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
