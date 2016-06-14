@@ -1860,7 +1860,13 @@ public class Eyes extends EyesBase {
 
         String originalOverflow = null;
         if (hideScrollbars) {
-            originalOverflow = EyesSeleniumUtils.hideScrollbars(driver, 200);
+            try {
+                originalOverflow =
+                        EyesSeleniumUtils.hideScrollbars(driver, 200);
+            } catch (EyesDriverOperationException e) {
+                logger.log("WARNING: Failed to hide scrollbars! Error: "
+                        + e.getMessage());
+            }
         }
         try {
             ImageProvider imageProvider =
@@ -1923,7 +1929,13 @@ public class Eyes extends EyesBase {
             return result;
         } finally {
             if (hideScrollbars) {
-                EyesSeleniumUtils.setOverflow(driver, originalOverflow);
+                try {
+                    EyesSeleniumUtils.setOverflow(driver, originalOverflow);
+                } catch (EyesDriverOperationException e) {
+                    // Bummer, but we'll continue with the screenshot anyway :)
+                    logger.log("WARNING: Failed to revert overflow! Error: "
+                            + e.getMessage());
+                }
             }
         }
     }

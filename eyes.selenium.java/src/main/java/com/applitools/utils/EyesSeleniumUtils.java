@@ -171,7 +171,11 @@ public class EyesSeleniumUtils {
                         "return origOverflow",
                 value);
         }
-        return (String) executor.executeScript(script);
+        try {
+            return (String) executor.executeScript(script);
+        } catch (WebDriverException e) {
+            throw new EyesDriverOperationException("Failed to set overflow", e);
+        }
     }
 
     /**
