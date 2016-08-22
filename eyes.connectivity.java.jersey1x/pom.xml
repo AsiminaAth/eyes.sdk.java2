@@ -1,16 +1,16 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>eyes-connectivity-java-jersey1x</artifactId>
+    <artifactId>eyes-connectivity-java-jersey1_17-sf2_51_0</artifactId>
     <packaging>jar</packaging>
 
-    <name>eyes-connectivity-java-jersey1x</name>
+    <name>eyes-connectivity-java-jersey1_17-sf2_51_0</name>
     <url>http://maven.apache.org</url>
 
     <description>Applitools Eyes SDK REST API communication implementation depending on Jersey version 1x</description>
     <parent>
         <groupId>com.applitools</groupId>
-        <artifactId>eyes-sdk-java-parent</artifactId>
+        <artifactId>eyes-sdk-java-jersey1_17-sf2_51_0-parent</artifactId>
         <version>2.51</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -18,13 +18,13 @@
     <dependencies>
         <dependency>
           <groupId>com.applitools</groupId>
-          <artifactId>eyes-common-java</artifactId>
+          <artifactId>eyes-common-java-jersey1_17-sf2_51_0</artifactId>
             <version>2.51</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.19</version>
+            <version>1.17</version>
         </dependency>
     </dependencies>
 </project>

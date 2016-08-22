@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.applitools</groupId>
-    <artifactId>eyes-sdk-java-parent</artifactId>
+    <artifactId>eyes-sdk-java-jersey1_17-sf2_51_0-parent</artifactId>
     <version>2.51</version>
     <packaging>pom</packaging>
-    <name>eyes-sdk-java-parent</name>
+    <name>eyes-sdk-java-jersey1_17-sf2_51_0-parent</name>
     <url>http://www.applitools.com</url>
     <description>Applitools Eyes SDK for Selenium Java WebDriver</description>
     <licenses>
@@ -41,10 +41,10 @@
     </developers>
     <modules>
         <module>eyes.common.java</module>
-        <!--<module>eyes.connectivity.java.jersey1x</module>-->
-        <module>eyes.connectivity.java.jersey2x</module>
+        <module>eyes.connectivity.java.jersey1x</module>
+        <!--<module>eyes.connectivity.java.jersey2x</module>-->
         <module>eyes.sdk.java</module>
-        <module>eyes.images.java</module>
+        <!--<module>eyes.images.java</module>-->
         <module>eyes.selenium.java</module>
     </modules>
     <distributionManagement>
