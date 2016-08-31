@@ -6,11 +6,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
+import com.sun.jersey.client.urlconnection.HttpURLConnectionFactory;
+import com.sun.jersey.client.urlconnection.URLConnectionClientHandler;
 
 import java.io.IOException;
-import java.net.URI;
+import java.net.*;
 import java.util.List;
 
 /**
@@ -38,20 +38,46 @@ class RestClient {
     protected ObjectMapper jsonMapper;
 
     /**
+     * Internal class used for configuring a proxy, if needed.
+     */
+    private static class ConnectionFactory implements HttpURLConnectionFactory {
+
+        Proxy proxy;
+
+        ConnectionFactory(ProxySettings proxySettings) {
+            if (proxySettings != null) {
+                URI proxyUri;
+                try {
+                    proxyUri = new URI(proxySettings.getUri());
+                } catch (URISyntaxException e) {
+                    throw new EyesException("Invalid proxy URI: " + e.getMessage());
+                }
+                proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyUri.getHost(), proxyUri.getPort()));
+            }
+        }
+
+
+        public HttpURLConnection getHttpURLConnection(URL url) throws IOException {
+            if (proxy != null) {
+                return (HttpURLConnection) url.openConnection(proxy);
+            }
+            return (HttpURLConnection) url.openConnection();
+        }
+    }
+
+    /**
      *
      * @param timeout Connect/Read timeout in milliseconds. 0 equals infinity.
      * @param proxySettings (optional) Setting for communicating via proxy.
      */
-    private static Client buildRestClient(int timeout,
-                                          ProxySettings proxySettings) {
-        // Creating the client configuration
-        ClientConfig cc = new DefaultClientConfig();
-        cc.getProperties().put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, timeout);
-        cc.getProperties().put(ClientConfig.PROPERTY_READ_TIMEOUT, timeout);
+    private static Client buildRestClient(int timeout, ProxySettings proxySettings) {
+        // Proxy
+        URLConnectionClientHandler ch  = new URLConnectionClientHandler(new ConnectionFactory(proxySettings));
 
-        // We ignore the proxy settings
-
-        return Client.create(cc);
+        Client client = new Client(ch);
+        client.setConnectTimeout(timeout);
+        client.setReadTimeout(timeout);
+        return client;
     }
 
     /***
@@ -93,12 +119,10 @@ class RestClient {
      */
     @SuppressWarnings("UnusedDeclaration")
     public void setProxyBase(ProxySettings proxySettings) {
-        throw new EyesException(
-                "Proxy not implemented in this version!");
-//        this.proxySettings = proxySettings;
-//
-//        restClient = buildRestClient(timeout, proxySettings);
-//        endPoint = restClient.resource(serverUrl);
+        this.proxySettings = proxySettings;
+
+        restClient = buildRestClient(timeout, proxySettings);
+        endPoint = restClient.resource(serverUrl);
     }
 
     /**
