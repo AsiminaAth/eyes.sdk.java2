@@ -2,7 +2,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>eyes-sdk-java-jersey2x</artifactId>
+    <artifactId>eyes-sdk-java-jersey1_17-sf2_53_1</artifactId>
     <packaging>jar</packaging>
 
     <name>eyes-sdk-java</name>
@@ -12,21 +12,22 @@
 
     <parent>
         <groupId>com.applitools</groupId>
-        <artifactId>eyes-sdk-java-parent</artifactId>
-        <version>2.51</version>
+        <artifactId>eyes-sdk-java-jersey1_17-sf2_53_1-parent</artifactId>
+        <version>2.52</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-common-java</artifactId>
-            <version>2.51</version>
+            <artifactId>eyes-common-java-jersey1_17-sf2_53_1</artifactId>
+            <version>2.52</version>
         </dependency>
         <dependency>
             <groupId>com.applitools</groupId>
-            <artifactId>eyes-connectivity-java-jersey2x</artifactId>
-            <version>2.51</version>
+            <!--<artifactId>eyes-connectivity-java-jersey2x</artifactId>-->
+            <artifactId>eyes-connectivity-java-jersey1_17-sf2_53_1</artifactId>
+            <version>2.52</version>
         </dependency>
     </dependencies>
 </project>
