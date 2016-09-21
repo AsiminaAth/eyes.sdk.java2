@@ -6,6 +6,8 @@ package com.applitools.eyes;
  */
 class MoveToRegionVisibilityStrategy implements RegionVisibilityStrategy {
 
+    private static final int VISIBILITY_OFFSET = 100; // Pixels
+
     private final Logger logger;
     private PositionMemento originalPosition;
 
@@ -18,7 +20,15 @@ class MoveToRegionVisibilityStrategy implements RegionVisibilityStrategy {
         logger.verbose("Getting current position state..");
         originalPosition = positionProvider.getState();
         logger.verbose("Done! Setting position..");
-        positionProvider.setPosition(location);
+
+        // We set the location to "almost" the location we were asked. This is because sometimes, moving the browser
+        // to the specific pixel where the element begins, causes the element to be slightly out of the viewport.
+        int dstX = location.getX() - VISIBILITY_OFFSET;
+        dstX = dstX < 0 ? 0 : dstX;
+        int dstY = location.getY() - VISIBILITY_OFFSET;
+        dstY = dstY < 0 ? 0 : dstY;
+        positionProvider.setPosition(new Location(dstX, dstY));
+
         logger.verbose("Done!");
     }
 
