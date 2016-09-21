@@ -319,10 +319,6 @@ public class EyesSeleniumUtils {
         final int SLEEP = 1000;
         final int RETRIES = 3;
 
-        // We move the window to (0,0) to have the best chance to be able to
-        // set the viewport size as requested.
-        driver.manage().window().setPosition(new Point(0, 0));
-
         RectangleSize actualViewportSize = extractViewportSize(logger, driver);
         logger.verbose("Initial viewport size:" + actualViewportSize);
 
@@ -332,6 +328,10 @@ public class EyesSeleniumUtils {
             logger.verbose("Required size already set.");
             return;
         }
+
+        // We move the window to (0,0) to have the best chance to be able to
+        // set the viewport size as requested.
+        driver.manage().window().setPosition(new Point(0, 0));
 
         Dimension browserSize = driver.manage().window().getSize();
         logger.verbose("Current browser size: " + browserSize);
@@ -361,7 +361,6 @@ public class EyesSeleniumUtils {
             // (border size for maximized browser sometimes different than
             // non-maximized, so the original browser size calculation is
             // wrong).
-            logger.verbose("Attempting one more time...");
             browserSize = driver.manage().window().getSize();
             requiredBrowserSize = new Dimension(
                     browserSize.width +
@@ -369,8 +368,8 @@ public class EyesSeleniumUtils {
                     browserSize.height +
                         (size.getHeight() - actualViewportSize.getHeight()));
 
-            logger.verbose("Browser size: " + browserSize);
-            logger.verbose("Required browser size: " + requiredBrowserSize);
+            logger.verbose("Trying to set browser size to: " +
+                    requiredBrowserSize);
 
             retriesLeft = RETRIES;
             do {
