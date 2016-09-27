@@ -23,7 +23,8 @@ class SessionStartInfo {
     private String verId;
     private String scenarioIdOrName;
     private BatchInfo batchInfo;
-    private String envName;
+    private String baselineEnvName;
+    private String environmentName;
     private AppEnvironment environment;
     private String branchName;
     private String parentBranchName;
@@ -32,7 +33,8 @@ class SessionStartInfo {
     public SessionStartInfo(String agentId, SessionType sessionType,
                             String appIdOrName, String verId,
                             String scenarioIdOrName, BatchInfo batchInfo,
-                            String envName, AppEnvironment environment,
+                            String baselineEnvName, String environmentName,
+                            AppEnvironment environment,
                             ImageMatchSettings defaultMatchSettings,
                             String branchName, String parentBranchName) {
         ArgumentGuard.notNullOrEmpty(agentId, "agentId");
@@ -47,7 +49,8 @@ class SessionStartInfo {
         this.verId = verId;
         this.scenarioIdOrName = scenarioIdOrName;
         this.batchInfo = batchInfo;
-        this.envName = envName;
+        this.baselineEnvName = baselineEnvName;
+        this.environmentName = environmentName;
         this.environment = environment;
         this.defaultMatchSettings = defaultMatchSettings;
         this.branchName = branchName;
@@ -78,8 +81,12 @@ class SessionStartInfo {
         return batchInfo;
     }
 
-    public String getEnvName() {
-        return envName;
+    public String getBaselineEnvName() {
+        return baselineEnvName;
+    }
+
+    public String getEnvironmentName() {
+        return environmentName;
     }
 
     public AppEnvironment getEnvironment() {

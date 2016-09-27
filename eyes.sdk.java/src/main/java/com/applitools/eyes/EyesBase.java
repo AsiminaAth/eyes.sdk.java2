@@ -54,7 +54,8 @@ abstract class EyesBase {
     private BatchInfo batch;
     private String hostApp;
     private String hostOS;
-    private String baselineName;
+    private String baselineEnvName;
+    private String environmentName;
     private ScaleMethod scaleMethod;
     private String branchName;
     private String parentBranchName;
@@ -796,29 +797,93 @@ abstract class EyesBase {
     }
 
     /**
+     *
+     *
      * @param baselineName If specified, determines the baseline to compare
      *                     with and disables automatic baseline inference.
+     *
+     * @deprecated Only available for backward compatibility. See {@link #setBaselineEnvName(String)}.
      */
     @SuppressWarnings("UnusedDeclaration")
     public void setBaselineName(String baselineName) {
 
-        logger.log("Baseline name: " + baselineName);
+        logger.log("Baseline environment name: " + baselineName);
 
         if(baselineName == null || baselineName.isEmpty()) {
-            this.baselineName = null;
+            this.baselineEnvName = null;
         }
         else {
-            this.baselineName = baselineName.trim();
+            this.baselineEnvName = baselineName.trim();
         }
     }
 
     /**
+     * @deprecated Only available for backward compatibility. See {@link #getBaselineEnvName()}.
+     *
      * @return The baseline name, if specified.
      */
     @SuppressWarnings("UnusedDeclaration")
     public String getBaselineName() {
-        return baselineName;
+        return baselineEnvName;
     }
+
+    /**
+     * If not {@code null}, determines the name of the environment of the baseline.
+     *
+     * @param baselineEnvName The name of the baseline's environment.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setBaselineEnvName(String baselineEnvName) {
+
+        logger.log("Baseline environment name: " + baselineEnvName);
+
+        if(baselineEnvName== null || baselineEnvName.isEmpty()) {
+            this.baselineEnvName = null;
+        }
+        else {
+            this.baselineEnvName = baselineEnvName.trim();
+        }
+    }
+
+    /**
+     * If not {@code null}, determines the name of the environment of the baseline.
+     *
+     * @return  The name of the baseline's environment, or {@code null} if no such name was set.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public String getBaselineEnvName() {
+        return baselineEnvName;
+    }
+
+
+    /**
+     * If not {@code null} specifies a name for the environment in which the application under test is running.
+     *
+     * @param envName The name of the environment of the baseline.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public void setEnvName(String envName) {
+
+        logger.log("Environment name: " + envName);
+
+        if(envName== null || envName.isEmpty()) {
+            this.environmentName = null;
+        }
+        else {
+            this.environmentName = envName.trim();
+        }
+    }
+
+    /**
+     * If not {@code null} specifies a name for the environment in which the application under test is running.
+     *
+     * @return  The name of the environment of the baseline, or {@code null} if no such name was set.
+     */
+    @SuppressWarnings("UnusedDeclaration")
+    public String getEnvName() {
+        return environmentName;
+    }
+
 
     /**
      * Superseded by {@link #setHostOS(String)} and {@link #setHostApp
@@ -1341,8 +1406,8 @@ abstract class EyesBase {
         logger.verbose("Application environment is " + appEnv);
 
         sessionStartInfo = new SessionStartInfo(getBaseAgentId(), sessionType,
-                getAppName(), null, testName, testBatch, baselineName, appEnv,
-                defaultMatchSettings, branchName, parentBranchName);
+                getAppName(), null, testName, testBatch, baselineEnvName, environmentName,
+                appEnv, defaultMatchSettings, branchName, parentBranchName);
 
         logger.verbose("Starting server session...");
         runningSession = serverConnector.startSession(sessionStartInfo);
