@@ -469,7 +469,7 @@ abstract class EyesBase {
 
     public static URI getDefaultServerUrl() {
         try {
-            return new URI("https://eyessdk.applitools.com");
+            return new URI("https://eyesapi.applitools.com");
         } catch (URISyntaxException ex) {
             throw new EyesException(ex.getMessage(), ex);
         }
