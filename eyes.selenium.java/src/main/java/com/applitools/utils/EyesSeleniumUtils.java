@@ -305,87 +305,146 @@ public class EyesSeleniumUtils {
         return new RectangleSize(width, height);
     }
 
+    public static boolean setBrowserSize(Logger logger, WebDriver driver,
+                                         RectangleSize requiredSize) {
+        final int SLEEP = 1000;
+        final int RETRIES = 3;
+
+        int retriesLeft = RETRIES;
+        Dimension dRequiredSize = new Dimension(requiredSize.getWidth(),
+                requiredSize.getHeight());
+        Dimension dCurrentSize;
+        RectangleSize currentSize;
+        do {
+            logger.verbose("Trying to set browser size to: " + requiredSize);
+            driver.manage().window().setSize(dRequiredSize);
+            GeneralUtils.sleep(SLEEP);
+            dCurrentSize = driver.manage().window().getSize();
+            currentSize = new RectangleSize(dCurrentSize.getWidth(),
+                    dCurrentSize.getHeight());
+            logger.verbose("Current browser size: " + currentSize);
+        } while (--retriesLeft > 0 && !currentSize.equals(requiredSize));
+
+        return currentSize == requiredSize;
+    }
+
+    public static boolean setBrowserSizeByViewportSize(Logger logger, WebDriver driver,
+                                                       RectangleSize actualViewportSize,
+                                                       RectangleSize requiredViewportSize) {
+        Dimension browserSize = driver.manage().window().getSize();
+        logger.verbose("Current browser size: " + browserSize);
+        RectangleSize requiredBrowserSize = new RectangleSize(
+                browserSize.width +
+                        (requiredViewportSize.getWidth() - actualViewportSize.getWidth()),
+                browserSize.height +
+                        (requiredViewportSize.getHeight() - actualViewportSize.getHeight()));
+
+        return setBrowserSize(logger, driver, requiredBrowserSize);
+    }
+
     /**
      *
      * @param logger The logger to use.
      * @param driver The web driver to use.
-     * @param size The size to set as the viepwort size.
+     * @param size The size to set as the viewport size.
      */
     public static void setViewportSize(Logger logger, WebDriver driver,
-                                RectangleSize size) {
-        logger.verbose("setViewportSize(" + size + ")");
+                                       RectangleSize size) {
 
         ArgumentGuard.notNull(size, "size");
 
-        final int SLEEP = 1000;
-        final int RETRIES = 3;
+        logger.verbose("setViewportSize(" + size + ")");
 
-        RectangleSize actualViewportSize = getViewportSizeOrDisplaySize(logger, driver);
+        RectangleSize requiredSize = new RectangleSize(size.getWidth(), size.getHeight());
+        RectangleSize actualViewportSize = getViewportSize((JavascriptExecutor) driver);
         logger.verbose("Initial viewport size:" + actualViewportSize);
 
         // If the viewport size is already the required size
-        if (size.getWidth() == actualViewportSize.getWidth() &&
-                size.getHeight() == actualViewportSize.getHeight()) {
+        if (actualViewportSize.equals(requiredSize)) {
             logger.verbose("Required size already set.");
             return;
         }
 
         // We move the window to (0,0) to have the best chance to be able to
         // set the viewport size as requested.
-        driver.manage().window().setPosition(new Point(0, 0));
-
-        Dimension browserSize = driver.manage().window().getSize();
-        logger.verbose("Current browser size: " + browserSize);
-        Dimension requiredBrowserSize = new Dimension(
-                browserSize.width +
-                        (size.getWidth() - actualViewportSize.getWidth()),
-                browserSize.height +
-                        (size.getHeight() - actualViewportSize.getHeight()));
-        logger.verbose("Trying to set browser size to: " + requiredBrowserSize);
-
-        int retriesLeft = RETRIES;
-        do {
-            driver.manage().window().setSize(requiredBrowserSize);
-            GeneralUtils.sleep(SLEEP);
-            browserSize = driver.manage().window().getSize();
-            logger.verbose("Current browser size: " + browserSize);
-        } while (--retriesLeft > 0 && !browserSize.equals(requiredBrowserSize));
-
-        if (!browserSize.equals(requiredBrowserSize)) {
-            throw new EyesException("Failed to set browser size!");
+        try {
+            driver.manage().window().setPosition(new Point(0, 0));
+        } catch (WebDriverException e) {
+            logger.verbose("Warning: Failed to move the browser window to (0,0)");
         }
 
-        actualViewportSize = getViewportSizeOrDisplaySize(logger, driver);
+        setBrowserSizeByViewportSize(logger, driver, actualViewportSize, requiredSize);
+
+        actualViewportSize = getViewportSize((JavascriptExecutor) driver);
+
+        if (actualViewportSize.equals(requiredSize)) {
+            return;
+        }
+
+        // Additional attempt. This Solves the "maximized browser" bug
+        // (border size for maximized browser sometimes different than
+        // non-maximized, so the original browser size calculation is
+        // wrong).
+        logger.verbose("Trying workaround for maximization...");
+        setBrowserSizeByViewportSize(logger, driver, actualViewportSize, requiredSize);
+
+        actualViewportSize = getViewportSize((JavascriptExecutor) driver);
         logger.verbose("Current viewport size: " + actualViewportSize);
-        if (!actualViewportSize.equals(size)) {
-            // Additional attempt. This Solves the "maximized browser" bug
-            // (border size for maximized browser sometimes different than
-            // non-maximized, so the original browser size calculation is
-            // wrong).
-            browserSize = driver.manage().window().getSize();
-            requiredBrowserSize = new Dimension(
-                    browserSize.width +
-                            (size.getWidth() - actualViewportSize.getWidth()),
-                    browserSize.height +
-                        (size.getHeight() - actualViewportSize.getHeight()));
 
-            logger.verbose("Trying to set browser size to: " +
-                    requiredBrowserSize);
-
-            retriesLeft = RETRIES;
-            do {
-                driver.manage().window().setSize(requiredBrowserSize);
-                GeneralUtils.sleep(SLEEP);
-                actualViewportSize = getViewportSizeOrDisplaySize(logger, driver);
-                logger.verbose("Browser size: "
-                        + driver.manage().window().getSize());
-                logger.verbose("Viewport size: " + actualViewportSize);
-            } while (--retriesLeft > 0 && !actualViewportSize.equals(size));
+        if (actualViewportSize.equals(requiredSize))
+        {
+            return;
         }
 
-        if (!actualViewportSize.equals(size)) {
-            throw new EyesException("Failed to set the viewport size.");
+        final int MAX_DIFF = 3;
+        int widthDiff = actualViewportSize.getWidth() - requiredSize.getWidth();
+        int widthStep = widthDiff != 0 ? (widthDiff / (-widthDiff)) : 1; // -1 for smaller size, 1 for larger
+        int heightDiff = actualViewportSize.getHeight() - requiredSize.getHeight();
+        int heightStep = heightDiff != 0 ? (heightDiff / (-heightDiff)) : 1;
+
+        Dimension dBrowserSize = driver.manage().window().getSize();
+        RectangleSize browserSize = new RectangleSize(dBrowserSize.getWidth(),
+                dBrowserSize.getHeight());
+
+        int currWidthChange = 0;
+        int currHeightChange = 0;
+        // We try the zoom workaround only if size difference is reasonable.
+        if (Math.abs(widthDiff) <= MAX_DIFF && Math.abs(heightDiff) <= MAX_DIFF)
+        {
+            logger.verbose("Trying workaround for zoom...");
+            do
+            {
+                // We specifically use "<=" (and not "<"), so to give an extra resize attempt
+                // in addition to reaching the diff, due to floating point issues.
+                if (Math.abs(currWidthChange) <= Math.abs(widthDiff) &&
+                        actualViewportSize.getWidth() != requiredSize.getWidth())
+                {
+                    currWidthChange += widthStep;
+                }
+                if (Math.abs(currHeightChange) <= Math.abs(heightDiff) &&
+                        actualViewportSize.getHeight() != requiredSize.getHeight())
+                {
+                    currHeightChange += heightStep;
+                }
+
+                setBrowserSize(logger, driver,
+                        new RectangleSize(browserSize.getWidth()+ currWidthChange,
+                                browserSize.getHeight() + currHeightChange));
+
+                actualViewportSize = getViewportSize((JavascriptExecutor) driver);
+                logger.verbose("Current viewport size: " + actualViewportSize);
+
+                if (actualViewportSize.equals(requiredSize))
+                {
+                    return;
+                }
+            } while (Math.abs(currWidthChange) <= Math.abs(widthDiff) ||
+                    Math.abs(currHeightChange) <= Math.abs(heightDiff));
+
+            logger.verbose("Zoom workaround failed.");
         }
+
+        throw new EyesException("Failed to set viewport size!");
     }
 
     /**
