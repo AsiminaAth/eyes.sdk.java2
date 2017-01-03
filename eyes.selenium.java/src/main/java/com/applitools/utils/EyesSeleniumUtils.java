@@ -267,6 +267,7 @@ public class EyesSeleniumUtils {
     }
 
     /**
+     *
      * @param logger The logger to use.
      * @param driver The web driver to use.
      * @return The viewport size of the current context.
