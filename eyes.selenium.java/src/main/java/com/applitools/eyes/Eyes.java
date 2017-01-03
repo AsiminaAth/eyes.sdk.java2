@@ -1807,7 +1807,7 @@ public class Eyes extends EyesBase {
      */
     public static RectangleSize getViewportSize(WebDriver driver) {
         ArgumentGuard.notNull(driver, "driver");
-        return EyesSeleniumUtils.extractViewportSize(new Logger(), driver);
+        return EyesSeleniumUtils.getViewportSizeOrDisplaySize(new Logger(), driver);
     }
 
     @Override

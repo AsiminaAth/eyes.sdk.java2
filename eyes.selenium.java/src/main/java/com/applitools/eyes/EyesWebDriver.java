@@ -426,7 +426,7 @@ public class EyesWebDriver implements HasCapabilities, HasInputDevices,
 
         logger.verbose("Extracting viewport size...");
         defaultContentViewportSize =
-                EyesSeleniumUtils.extractViewportSize(logger, this);
+                EyesSeleniumUtils.getViewportSizeOrDisplaySize(logger, this);
         logger.verbose("Done! Viewport size: " + defaultContentViewportSize);
 
         if (currentFrames.size() > 0) {
