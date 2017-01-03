@@ -19,6 +19,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 
 public class ImageUtils {
+
+    public static final int REQUIRED_IMAGE_TYPE = BufferedImage.TYPE_4BYTE_ABGR;
+
     /**
      * Encodes a given image as PNG.
      *
@@ -65,6 +68,8 @@ public class ImageUtils {
         BufferedImage result;
         try {
             result = ImageIO.read(new File(path));
+            // Make sure the image is of the correct type
+            result = copyImageWithType(result, REQUIRED_IMAGE_TYPE);
         } catch (IOException e) {
             throw new EyesException("Failed to to load the image bytes from "
                     + path, e);
@@ -88,6 +93,8 @@ public class ImageUtils {
         try {
             result = ImageIO.read(ImageUtils.class.getClassLoader()
                     .getResourceAsStream(resource));
+            // Make sure the image is of the correct type
+            result = copyImageWithType(result, REQUIRED_IMAGE_TYPE);
         } catch (IOException e) {
             throw new EyesException(
                     "Failed to to load the image from resource: " + resource,
@@ -132,7 +139,7 @@ public class ImageUtils {
      *
      * @param imageBytes The raw bytes of the image.
      * @return A BufferedImage instance representing the image.
-     * @throws com.applitools.eyes.EyesException If there was a problem
+     * @throws EyesException If there was a problem
      * creating the {@code BufferedImage} instance.
      */
     public static BufferedImage imageFromBytes(byte[] imageBytes) throws
@@ -142,6 +149,8 @@ public class ImageUtils {
             ByteArrayInputStream screenshotStream =
                     new ByteArrayInputStream(imageBytes);
             image = ImageIO.read(screenshotStream);
+            // Make sure the image is of the correct type
+            image = copyImageWithType(image, REQUIRED_IMAGE_TYPE);
             screenshotStream.close();
         } catch (IOException e) {
             throw new EyesException("Failed to create buffered image!", e);

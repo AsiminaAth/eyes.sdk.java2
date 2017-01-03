@@ -149,11 +149,11 @@ public class ImageDeltaCompressor {
     /**
      * Compresses a target image based on a difference from a source image.
      *
-     * @param target The image we want to compress.
+     * @param target The image we want to compress. (type is TYPE_4BYTE_ABGR)
      * @param targetEncoded The image we want to compress in its png bytes
      *                      representation.
      * @param source The baseline image by which a compression will be
-     *               performed.
+     *               performed. (type is TYPE_4BYTE_ABGR)
      * @param blockSize How many pixels per block.
      * @return The compression result, or the {@code targetEncoded} if the
      * compressed bytes count is greater than the uncompressed bytes count.
@@ -172,7 +172,7 @@ public class ImageDeltaCompressor {
             return targetEncoded;
         }
 
-        // IMPORTANT: Notice that the pixel bytes are (A)RGB!
+        // IMPORTANT: Notice that the pixel bytes are (A)BGR!
         byte[] targetPixels =
                 ((DataBufferByte) target.getRaster().getDataBuffer()).getData();
         byte[] sourcePixels =
@@ -189,7 +189,7 @@ public class ImageDeltaCompressor {
                 + ((target.getWidth() % blockSize) == 0 ? 0 : 1);
         int blockRowsCount = (target.getHeight() / blockSize)
                 + ((target.getHeight() % blockSize) == 0 ? 0 : 1);
-        
+
         // We'll use a stream for the compression.
         ByteArrayOutputStream resultStream = new ByteArrayOutputStream();
         CountingOutputStream resultCountingStream =
