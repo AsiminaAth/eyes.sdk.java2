@@ -390,6 +390,8 @@ public class Eyes extends EyesBase {
                                 BufferedImage image,
                                 String tag,
                                 boolean ignoreMismatch) {
+        // We verify that the image is indeed in the correct format.
+        image = ImageUtils.normalizeImageType(image);
 
         // Set the screenshot to be verified.
         screenshot = new EyesImagesScreenshot(image);

@@ -22,6 +22,14 @@ public class ImageUtils {
 
     public static final int REQUIRED_IMAGE_TYPE = BufferedImage.TYPE_4BYTE_ABGR;
 
+    public static BufferedImage normalizeImageType(BufferedImage image) {
+        if (image.getType() == REQUIRED_IMAGE_TYPE) {
+            return image;
+        }
+
+        return ImageUtils.copyImageWithType(image, REQUIRED_IMAGE_TYPE);
+    }
+
     /**
      * Encodes a given image as PNG.
      *
@@ -65,16 +73,16 @@ public class ImageUtils {
      */
     public static BufferedImage imageFromFile(String path) throws
             EyesException {
-        BufferedImage result;
+        BufferedImage image;
         try {
-            result = ImageIO.read(new File(path));
+            image = ImageIO.read(new File(path));
             // Make sure the image is of the correct type
-            result = copyImageWithType(result, REQUIRED_IMAGE_TYPE);
+            image = normalizeImageType(image);
         } catch (IOException e) {
             throw new EyesException("Failed to to load the image bytes from "
                     + path, e);
         }
-        return result;
+        return image;
     }
 
     @SuppressWarnings("UnusedDeclaration")
@@ -89,18 +97,18 @@ public class ImageUtils {
      */
     public static BufferedImage imageFromResource(String resource) throws
             EyesException {
-        BufferedImage result;
+        BufferedImage image;
         try {
-            result = ImageIO.read(ImageUtils.class.getClassLoader()
+            image = ImageIO.read(ImageUtils.class.getClassLoader()
                     .getResourceAsStream(resource));
             // Make sure the image is of the correct type
-            result = copyImageWithType(result, REQUIRED_IMAGE_TYPE);
+            image = normalizeImageType(image);
         } catch (IOException e) {
             throw new EyesException(
                     "Failed to to load the image from resource: " + resource,
                     e);
         }
-        return result;
+        return image;
     }
 
     /**
@@ -150,7 +158,7 @@ public class ImageUtils {
                     new ByteArrayInputStream(imageBytes);
             image = ImageIO.read(screenshotStream);
             // Make sure the image is of the correct type
-            image = copyImageWithType(image, REQUIRED_IMAGE_TYPE);
+            image = normalizeImageType(image);
             screenshotStream.close();
         } catch (IOException e) {
             throw new EyesException("Failed to create buffered image!", e);
@@ -276,11 +284,6 @@ public class ImageUtils {
                         Scalr.Mode.FIT_TO_WIDTH, scaledWidth, scaledHeight);
 
 
-        // Verify that the scaled image is the same type as the original.
-        if (image.getType() == scaledImage.getType()) {
-            return scaledImage;
-
-        }
-        return copyImageWithType(scaledImage, image.getType());
+        return normalizeImageType(scaledImage);
     }
 }
