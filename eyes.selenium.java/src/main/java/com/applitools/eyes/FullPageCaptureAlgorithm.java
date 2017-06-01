@@ -231,7 +231,9 @@ class FullPageCaptureAlgorithm {
                 actualImageHeight < stitchedImage.getHeight()) {
             logger.verbose("Trimming unnecessary margins..");
             stitchedImage = ImageUtils.getImagePart(stitchedImage,
-                    new Region(0, 0, actualImageWidth, actualImageHeight));
+                    new Region(0, 0,
+                            Math.min(actualImageWidth, stitchedImage.getWidth()),
+                            Math.min(actualImageHeight, stitchedImage.getHeight())));
             logger.verbose("Done!");
         }
 
